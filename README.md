@@ -1,2 +1,2 @@
 # myRetail-RESTful-service
-Technical Assessment Case Studies - Target
+Technical Assessment Case Studies
