@@ -3,8 +3,6 @@ FROM python:2-alpine
 MAINTAINER Slade Baumann
 
 RUN pip install --no-cache-dir gunicorn
-RUN pip install --no-cache-dir \
-    "falcon"
 
 COPY /. /myretail-restful-service
 

@@ -12,7 +12,7 @@ Uses Docker for running in a container.
 ### Run (using gunicorn)
   - `docker run --rm \
     --name myretail-restful-service \
-    -p 8080:8080 \
+    --net=host -p 8080:8080 \
     myretail-restful-service`
 
 ### Show
