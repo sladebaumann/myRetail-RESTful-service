@@ -5,13 +5,37 @@ import urllib2
 
 from collections import OrderedDict
 
+REDIS_DB = redis.StrictRedis(host='localhost', port=6379, db=0)
+
 
 class Resource(object):
     def on_get(self, req, resp, id):
         product = RetrieveData()
         resp.body = json.dumps(product.get_combined_data(id))
         resp.status = falcon.HTTP_200
-    #on_post will go here most likely
+    def on_put(self, req, resp, id):
+        new_product = req.stream.read()
+        write_data = WriteData()
+        # TODO: fill in WriteData class to write to DB new price
+        write_data.write_price_to_db(id, new_product)
+        resp.status = falcon.HTTP_200
+
+
+class WriteData(object):
+    # TODO: below
+    # verify id is in current external api and database
+    # verify id in new_product is same as id
+    # pull out price info from new_product
+    # write price to redis hash
+    # return True or something happy?
+    # was using `http PUT localhost:8000/products/13860428 product:=@./product_info.json``
+    # to call, but postman (chrome plugin) may be best option. figure out how to
+    # put json with postman
+    def write_price_to_db(self, id, new_product):
+        print('nothing')
+        # verify that id is in
+    def get_new_product_price(self, new_product):
+        print('nothing')
 
 
 class RetrieveData(object):
@@ -43,9 +67,8 @@ class RetrieveData(object):
         # and the values must go in reverse order as you want printed
         # `redis-cli HMSET 13860428 currency_code USD value 13.49`
         # `redis-cli HGETALL 13860428`
-        redis_db = redis.StrictRedis(host='localhost', port=6379, db=0)
         # redis command to get entire hash (dict in python) based on id
-        current_price = redis_db.hgetall(id)
+        current_price = REDIS_DB.hgetall(id)
         # convert price from string that redis stores to float
         current_price['value'] = float(current_price['value'])
         price_dict['current_price'] = current_price
