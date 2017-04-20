@@ -1,7 +1,8 @@
-import falcon
 import json
 import redis
 import urllib2
+
+from myretail_restful_service.common import exceptions
 
 REDIS_DB = redis.StrictRedis(host='localhost', port=6379, db=0)
 
@@ -10,15 +11,13 @@ class Common(object):
         # method simply loads json from external api and returns it
         try:
             info = json.load(urllib2.urlopen(
-            "http://redsky.target.com/v1/pdp/tcin/13860428?excludes=taxonomy,"
-            "price,promotion,bulk_ship,rating_and_review_reviews,"
-            "rating_and_review_statistics,question_answer_statistics"))
+                "http://redsky.target.com/v1/pdp/tcin/13860428?excludes=taxonomy,"
+                "price,promotion,bulk_ship,rating_and_review_reviews,"
+                "rating_and_review_statistics,question_answer_statistics"))
         except Exception:
-            raise falcon.HTTPError(
-                "404 Object Not Found",
-                description="External API url does not exist or "
-                            "can't be found.")
-        return info
+            exceptions.FalconExceptions().external_api_not_found()
+        else:
+            return info
 
     def verify_id_exists_in_external_api(self, id, info):
         # check if id that is passed it is in the external API
@@ -26,18 +25,20 @@ class Common(object):
                 'product_id']) == id:
             return int(id)
         else:
-            raise falcon.HTTPError(
-                "400 Product {id} does not exist",
-                description="Product {id} doesn't exist in external API. "
-                            "Please make sure your URL is written correctly.")
+            exceptions.FalconExceptions().product_id_not_in_external_api()
 
     def verify_id_exists_in_database(self, id):
         # check if id passed is in database
         if REDIS_DB.hexists(id, "value"):
             return True
         else:
-            raise falcon.HTTPError(
-                "400 Product {id} does not exist",
-                description="Product {id} doesn't exist in database. "
-                            "Please make sure initial database entry "
-                            "exists (see README.md)")
+            exceptions.FalconExceptions().product_id_not_in_database()
+
+    def test_redis_connection(self):
+        # verify redis server is active
+        try:
+            REDIS_DB.ping()
+        except redis.ConnectionError:
+            exceptions.FalconExceptions().database_unreachable()
+        else:
+            return REDIS_DB
