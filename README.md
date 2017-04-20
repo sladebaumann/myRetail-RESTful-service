@@ -15,6 +15,9 @@ database before we can get started.
     - `redis-cli HMSET 13860428 value 13.49 currency_code USD`
     - https://redis.io/topics/rediscli
 
+You will need the Redis container service running while interacting
+with this application.
+
 ## Using Docker to run this application
 
 ### Build
@@ -28,4 +31,4 @@ database before we can get started.
     - `curl localhost:8080/products/13860428`
     - alternatively, open `http://localhost:8080` in a web browser
   - PUT new value by id
-  - `curl localhost:8080/products/13860428 -X PUT -H "Content-Type: application/json" -d '{"current_price": {"currency_code": "USD", "value": 13.49}, "id": 13860428, "name": "The Big Lebowski (Blu-ray)"}'`
+  - `curl localhost:8080/products/13860428 -X PUT -H "Content-Type: application/json" -d '{"current_price": {"currency_code": "USD", "value": 11.99}, "id": 13860428, "name": "The Big Lebowski (Blu-ray)"}'`
