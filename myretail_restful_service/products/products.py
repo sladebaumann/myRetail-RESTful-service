@@ -31,18 +31,17 @@ class UpdateData(object):
         return ('New Product Value Written to Database Successfully')
 
     def get_new_product_price(self, new_product):
-        # set new product price from URL
-       try:
-           new_product_dict = json.loads(new_product)
-       except Exception:
-           exceptions.FalconExceptions().json_wrong_type()
-       else:
-           try:
-               new_value = new_product_dict["current_price"]["value"]
-           except Exception:
-               exceptions.FalconExceptions().json_incorrect_syntax()
-           else:
-               return new_value
+        try:
+            new_product_dict = json.loads(new_product)
+        except Exception:
+            exceptions.FalconExceptions().json_wrong_type()
+        else:
+            try:
+                new_value = new_product_dict["current_price"]["value"]
+            except Exception:
+                exceptions.FalconExceptions().json_incorrect_syntax()
+            else:
+                return new_value
 
 
 class RetrieveData(object):

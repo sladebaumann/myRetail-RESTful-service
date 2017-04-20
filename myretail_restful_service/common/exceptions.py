@@ -27,7 +27,7 @@ class FalconExceptions(object):
         raise falcon.HTTPError(
             "400 Object Not Found",
             description=("Product {id} doesn't exist in external API. "
-                        "Please make sure your URL is written correctly."))
+                         "Please make sure your URL is written correctly."))
 
     def product_id_not_in_database(self):
         raise falcon.HTTPError(

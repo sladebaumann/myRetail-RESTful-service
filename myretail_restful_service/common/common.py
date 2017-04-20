@@ -6,14 +6,16 @@ from myretail_restful_service.common import exceptions
 
 REDIS_DB = redis.StrictRedis(host='localhost', port=6379, db=0)
 
+
 class Common(object):
     def get_external_api(self):
         # method simply loads json from external api and returns it
         try:
             info = json.load(urllib2.urlopen(
-                "http://redsky.target.com/v1/pdp/tcin/13860428?excludes=taxonomy,"
-                "price,promotion,bulk_ship,rating_and_review_reviews,"
-                "rating_and_review_statistics,question_answer_statistics"))
+                "http://redsky.target.com/v1/pdp/tcin/13860428?"
+                "excludes=taxonomy,price,promotion,bulk_ship,rating"
+                "_and_review_reviews,rating_and_review_statistics,"
+                "question_answer_statistics"))
         except Exception:
             exceptions.FalconExceptions().external_api_not_found()
         else:
