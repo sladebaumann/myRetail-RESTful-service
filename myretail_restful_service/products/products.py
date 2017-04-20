@@ -16,12 +16,12 @@ class Resource(object):
 
     def on_put(self, req, resp, id):
         new_product = req.stream.read()
-        write_data = WriteData().write_price_to_db(id, new_product)
+        write_data = UpdateData().write_price_to_db(id, new_product)
         resp.body = write_data
         resp.status = falcon.HTTP_200
 
 
-class WriteData(object):
+class UpdateData(object):
     def write_price_to_db(self, id, new_product):
         new_value = self.get_new_product_price(new_product)
         external_api = common.Common().get_external_api()
