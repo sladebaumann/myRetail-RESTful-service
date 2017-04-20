@@ -1,7 +1,4 @@
 import falcon
-import logging
-
-LOGGER = logging.getLogger(__name__)
 
 
 class SetupAPI(object):
