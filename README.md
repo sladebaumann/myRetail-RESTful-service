@@ -33,6 +33,6 @@ with this application.
 ### Interact
   - GET a product by id
     - `curl localhost:8080/products/13860428`
-    - alternatively, open `http://localhost:8080` in a web browser
+    - alternatively, open `localhost:8080/products/13860428` in a web browser
   - PUT new value by id
   - `curl localhost:8080/products/13860428 -X PUT -H "Content-Type: application/json" -d '{"current_price": {"currency_code": "USD", "value": 11.99}, "id": 13860428, "name": "The Big Lebowski (Blu-ray)"}'`
