@@ -1,7 +1,6 @@
 import falcon
 import json
 import redis
-import urllib2
 
 from collections import OrderedDict
 from myretail_restful_service.common import common
@@ -14,6 +13,7 @@ class Resource(object):
         product = RetrieveData()
         resp.body = json.dumps(product.get_combined_data(id))
         resp.status = falcon.HTTP_200
+
     def on_put(self, req, resp, id):
         new_product = req.stream.read()
         write_data = WriteData().write_price_to_db(id, new_product)
@@ -48,7 +48,8 @@ class RetrieveData(object):
         external_api = common.Common().get_external_api()
         # check if id that is passed it is in the external API
         product_id = common.Common().verify_id_exists(id, external_api)
-        title = (external_api['product']['item']['product_description']['title'])
+        title = (
+            external_api['product']['item']['product_description']['title'])
 
         external_dict['id'] = product_id
         external_dict['name'] = title
@@ -65,14 +66,13 @@ class RetrieveData(object):
 
         return price_dict
 
-
     def get_combined_data(self, id):
         external_data = self.get_external_data(id)
         database_data = self.get_database_data(id)
         combined_data = {}
 
         # combine data into one dict
-        for data in (external_data,database_data):
+        for data in (external_data, database_data):
             combined_data.update(data)
 
         # order the dict using OrderedDict for output
