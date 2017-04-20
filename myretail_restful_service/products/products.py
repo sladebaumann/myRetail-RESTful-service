@@ -26,12 +26,11 @@ class UpdateData(object):
         new_value = self.get_new_product_price(new_product)
         external_api = common.Common().get_external_api()
         product_id = common.Common().verify_id_exists(id, external_api)
-        if REDIS_DB.hexists(product_id, "value"):
+        if common.Common().verify_id_exists_in_database(id):
             REDIS_DB.hset(product_id, "value", new_value)
             return ('New Product Value Written to Database Successfully')
         else:
-            return (
-                'Products ID does not exist, so value has not been written. '
+            raise falcon.HTTPError('400 Products ID does not exist, so value has not been written. '
                 'Please try again with valid JSON.')
 
     def get_new_product_price(self, new_product):
@@ -47,7 +46,9 @@ class RetrieveData(object):
         # get external api from common method
         external_api = common.Common().get_external_api()
         # check if id that is passed it is in the external API
-        product_id = common.Common().verify_id_exists(id, external_api)
+        # and return product_id
+        product_id = common.Common().verify_id_exists_in_external_api(
+            id, external_api)
         title = (
             external_api['product']['item']['product_description']['title'])
 
@@ -59,6 +60,8 @@ class RetrieveData(object):
     def get_database_data(self, id):
         price_dict = {}
         # use id from URL
+        if REDIS_DB.hexists(id, "value"):
+
         current_price = REDIS_DB.hgetall(id)
         # convert price from string that redis stores to float
         current_price['value'] = float(current_price['value'])
