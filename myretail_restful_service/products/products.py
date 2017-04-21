@@ -36,6 +36,7 @@ class UpdateData(object):
         except Exception:
             exceptions.FalconExceptions().json_wrong_type()
 
+
 class RetrieveData(object):
     def get_external_data(self, id):
         external_dict = {}
