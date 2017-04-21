@@ -15,6 +15,6 @@ setup(
             'myretail-restful-service=myretail_restful_service.wsgi:app.api'
         ],
     },
-    install_requires=['falcon','redis'],
+    install_requires=['falcon', 'mock', 'redis'],
     classifiers=[],
 )

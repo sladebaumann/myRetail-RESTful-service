@@ -7,13 +7,13 @@ from myretail_restful_service.common import common, exceptions
 
 class Resource(object):
     def on_get(self, req, resp, id):
-        redis_db = common.Common().test_redis_connection()
+        redis_db = common.Common().verify_successful_redis_connection()
         product = RetrieveData()
         resp.body = json.dumps(product.get_combined_data(id, redis_db))
         resp.status = falcon.HTTP_200
 
     def on_put(self, req, resp, id):
-        redis_db = common.Common().test_redis_connection()
+        redis_db = common.Common().verify_successful_redis_connection()
         new_product = req.stream.read()
         write_data = UpdateData().write_price_to_db(id, new_product, redis_db)
         resp.body = write_data
@@ -32,17 +32,9 @@ class UpdateData(object):
 
     def get_new_product_price(self, new_product):
         try:
-            new_product_dict = json.loads(new_product)
+            return json.loads(new_product)["current_price"]["value"]
         except Exception:
             exceptions.FalconExceptions().json_wrong_type()
-        else:
-            try:
-                new_value = new_product_dict["current_price"]["value"]
-            except Exception:
-                exceptions.FalconExceptions().json_incorrect_syntax()
-            else:
-                return new_value
-
 
 class RetrieveData(object):
     def get_external_data(self, id):

@@ -36,7 +36,7 @@ class Common(object):
         else:
             exceptions.FalconExceptions().product_id_not_in_database()
 
-    def test_redis_connection(self):
+    def verify_successful_redis_connection(self):
         # verify redis server is active
         try:
             REDIS_DB.ping()
